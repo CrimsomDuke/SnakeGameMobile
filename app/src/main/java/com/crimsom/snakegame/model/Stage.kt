@@ -1,27 +1,25 @@
 package com.crimsom.snakegame.model
 
-class Stage {
+class Stage(var width: Int = 20, var height: Int = 10) {
 
-    public var width : Int = 20
-    public var height : Int = 10
-    public var gameMap : Array<Array<Int>> = Array(height) { Array(width) { 0 } }
+    public lateinit var gameMap : Array<Array<Int>>;
 
     public lateinit var snake : Snake;
 
     public var inGame : Boolean = true
 
     init{
+        gameMap = Array(height) { Array(width) { 0 } }
+
         this.snake = Snake()
         setupMatrix()
     }
 
     public fun processGame(delta : Float) {
-        while(inGame){
-            moveSnake()
-            printMap()
-            Thread.sleep(1000)
-            setRandomDir()
-        }
+        moveSnake()
+        //printMap()
+        Thread.sleep(500)
+        setRandomDir();
     }
 
     public fun setRandomDir(){

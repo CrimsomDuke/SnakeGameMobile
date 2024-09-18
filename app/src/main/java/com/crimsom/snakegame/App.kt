@@ -12,5 +12,7 @@ public fun main(args : Array<String>) {
 
     App.stage.printMap();
 
-    App.stage.processGame(0.1f);
+    while(App.stage.inGame){
+        App.stage.processGame(0.1f);
+    }
 }
