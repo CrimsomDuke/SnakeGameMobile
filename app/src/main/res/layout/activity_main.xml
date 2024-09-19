@@ -13,7 +13,52 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.crimsom.snakegame.view.TouchPanel
+        android:id="@+id/touchPanelUP"
+        android:layout_width="410dp"
+        android:layout_height="141dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.crimsom.snakegame.view.TouchPanel
+        android:id="@+id/touchPanelLEFT"
+        android:layout_width="210dp"
+        android:layout_height="435dp"
+        app:layout_constraintEnd_toStartOf="@+id/touchPanelRIGHT"
+        app:layout_constraintHorizontal_bias="0.079"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/touchPanelUP" />
+
+    <com.crimsom.snakegame.view.TouchPanel
+        android:id="@+id/touchPanelRIGHT"
+        android:layout_width="202dp"
+        android:layout_height="434dp"
+        android:layout_marginBottom="3dp"
+        app:layout_constraintBottom_toTopOf="@+id/touchPanelDOWN"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/touchPanelUP"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.crimsom.snakegame.view.TouchPanel
+        android:id="@+id/touchPanelDOWN"
+        android:layout_width="413dp"
+        android:layout_height="153dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.996" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

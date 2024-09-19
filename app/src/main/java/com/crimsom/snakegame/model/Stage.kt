@@ -1,5 +1,7 @@
 package com.crimsom.snakegame.model
 
+import com.crimsom.snakegame.view.activities.MainActivity
+
 class Stage(var width: Int = 20, var height: Int = 10) {
 
     public lateinit var gameMap : Array<Array<Int>>;
@@ -18,8 +20,72 @@ class Stage(var width: Int = 20, var height: Int = 10) {
     public fun processGame(delta : Float) {
         moveSnake()
         //printMap()
-        Thread.sleep(500)
-        setRandomDir();
+        Thread.sleep(MainActivity.DELAY)
+    }
+
+    public fun moveSnake(){
+        var nextCell = snake.getNextCell(gameMap)
+
+        if(nextCell.value == 1){
+            inGame = false
+            return
+        }
+
+        if (nextCell.value == 2) {
+            snake.nodes.addFirst(SnakeNode(nextCell.x, nextCell.y))
+            gameMap[nextCell.x][nextCell.y] = 0
+            generateRandomFruit()
+        } else {
+            snake.nodes.addFirst(SnakeNode(nextCell.x, nextCell.y))
+            snake.nodes.removeLast()
+        }
+
+        snake.head = snake.nodes.first()
+        snake.tail = snake.nodes.last()
+
+        updateMap()
+    }
+
+    public fun generateRandomFruit(){
+
+        //columns are rows and rows are columns
+
+        var randX = (0 until height).random()
+        var randY = (0 until width).random()
+
+        if(gameMap[randX][randY] != 1){
+            gameMap[randX][randY] = 2
+            return;
+        }
+
+        //if the snake is there try again
+        generateRandomFruit()
+    }
+
+    public fun updateMap(){
+        for (i in gameMap.indices) {
+            for (j in gameMap[i].indices) {
+                //if it's not a fruit, refresh
+                if(gameMap[i][j] != 2) gameMap[i][j] = 0
+            }
+        }
+        //draw the SOLID SNAKE
+        for (node in snake.nodes) {
+            gameMap[node.x][node.y] = 1
+        }
+    }
+
+    private fun setupMatrix() {
+
+        for (i in gameMap.indices) {
+            for (j in gameMap[i].indices) {
+                gameMap[i][j] = 0
+            }
+        }
+
+        generateRandomFruit()
+        generateRandomFruit()
+        generateRandomFruit()
     }
 
     public fun setRandomDir(){
@@ -42,41 +108,6 @@ class Stage(var width: Int = 20, var height: Int = 10) {
         snake.currentDir = newDir
     }
 
-    public fun moveSnake(){
-        var nextCell = snake.getNextCell(gameMap)
-
-        if(nextCell.value == 1){
-            inGame = false
-            return
-        }
-
-        if (nextCell.value == 2) {
-            snake.nodes.addFirst(SnakeNode(nextCell.x, nextCell.y))
-            gameMap[nextCell.x][nextCell.y] = 0
-        } else {
-            snake.nodes.addFirst(SnakeNode(nextCell.x, nextCell.y))
-            snake.nodes.removeLast()
-        }
-
-        snake.head = snake.nodes.first()
-        snake.tail = snake.nodes.last()
-
-        updateMap()
-    }
-
-    public fun updateMap(){
-        for (i in gameMap.indices) {
-            for (j in gameMap[i].indices) {
-                //if it's not a fruit, refresh
-                if(gameMap[i][j] != 2) gameMap[i][j] = 0
-            }
-        }
-
-        for (node in snake.nodes) {
-            gameMap[node.x][node.y] = 1
-        }
-    }
-
     public fun printMap() {
         //draw inverted, given that columns are rows and rows are columns
         for (i in gameMap[0].indices) {
@@ -90,18 +121,6 @@ class Stage(var width: Int = 20, var height: Int = 10) {
         }
 
         println("--------------------------------------------")
-    }
-
-    private fun setupMatrix() {
-
-        for (i in gameMap.indices) {
-            for (j in gameMap[i].indices) {
-                gameMap[i][j] = 0
-            }
-        }
-        gameMap[7][0] = 2;
-        gameMap[3][3] = 2
-        gameMap[3][4] = 2
     }
 
 }

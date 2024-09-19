@@ -1,13 +1,17 @@
 package com.crimsom.snakegame.view.cavas
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.crimsom.snakegame.model.Direction
 import com.crimsom.snakegame.model.Stage
+import com.crimsom.snakegame.view.RetryGameActivity
+import com.crimsom.snakegame.view.activities.MainActivity
 
 class Canvas(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
@@ -15,6 +19,8 @@ class Canvas(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
     private val paint : Paint = Paint();
 
     private var CELL_SIZE : Float = 100f;
+
+    public var onFinishAction : () -> Unit = {}
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -24,26 +30,35 @@ class Canvas(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
         CELL_SIZE = width*2 / model.width.toFloat();
 
         drawGameBoard(canvas);
-        model.processGame(0.1f);
+        if(model.inGame){
+            model.processGame(0.1f);
+        }else{
+            onFinishAction();
+            return;
+        }
 
-        postInvalidateDelayed(100)
+        invalidate()
 
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event == null) return false;
+    public fun setOnFinishedAction(action : () -> Unit){
+        onFinishAction = action;
+    }
 
-        when(event.action){
-            MotionEvent.ACTION_DOWN -> {
-                println("Touch at ${event.x}, ${event.y}")
-                invalidate();
-            }
-        }
+    public fun changeSnakeDirection(direction: Direction){
 
-        return true;
+        //Opposing directions
+        if(model.snake.currentDir == Direction.UP && direction == Direction.DOWN) return;
+        if(model.snake.currentDir == Direction.DOWN && direction == Direction.UP) return;
+        if(model.snake.currentDir == Direction.LEFT && direction == Direction.RIGHT) return;
+        if(model.snake.currentDir == Direction.RIGHT && direction == Direction.LEFT) return;
+
+        model.snake.currentDir = direction;
     }
 
     private fun drawGameBoard(canvas: Canvas){
+
+        //Draw inverted (height <-> widht)
         for (i in 0 until model.height){
             for (j in 0 until model.width){
                 paint.color = Color.BLACK;
@@ -51,15 +66,25 @@ class Canvas(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
                 if(model.gameMap[i][j] == 2){
                     paint.color = Color.RED;
-                    canvas.drawRect(i * CELL_SIZE, j * CELL_SIZE, i * CELL_SIZE + CELL_SIZE, j * CELL_SIZE + CELL_SIZE, paint)
-                }
-
-                if(model.gameMap[i][j] == 1){
+                    canvas.drawCircle(i * CELL_SIZE + (CELL_SIZE/2), j * CELL_SIZE + (CELL_SIZE/2), CELL_SIZE/2, paint)
+                }else if(model.gameMap[i][j] == 1){
                     paint.color = Color.GREEN;
                     canvas.drawRect(i * CELL_SIZE, j * CELL_SIZE, i * CELL_SIZE + CELL_SIZE, j * CELL_SIZE + CELL_SIZE, paint)
                 }
             }
         }
+        //draw the head at the end to avoid problems
+        drawSnakeHead(canvas);
+    }
+
+    private fun drawSnakeHead(canvas: Canvas){
+        //for snake's head
+        paint.color = Color.GREEN;
+
+        canvas.drawCircle(model.snake.head.x * CELL_SIZE + (CELL_SIZE/2),
+            model.snake.head.y * CELL_SIZE + (CELL_SIZE/2),
+            CELL_SIZE * 0.6f,
+            paint)
     }
 
 }

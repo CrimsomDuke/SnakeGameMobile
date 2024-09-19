@@ -13,6 +13,9 @@
         android:theme="@style/Theme.SnakeGame"
         tools:targetApi="31">
         <activity
+            android:name=".view.RetryGameActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.activities.MainActivity"
             android:exported="true">
             <intent-filter>
