@@ -11,6 +11,7 @@ class Stage(var width: Int = 20, var height: Int = 10) {
     public var inGame : Boolean = true
 
     init{
+        //INVERTED, Xs are width and Ys are height
         gameMap = Array(height) { Array(width) { 0 } }
 
         this.snake = Snake()
